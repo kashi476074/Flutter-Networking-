@@ -1,7 +1,5 @@
-import 'dart:convert';
+// ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'dart:ffi';
 import 'Post.dart';
 
 class Json extends StatefulWidget {
@@ -24,18 +22,20 @@ class _json extends State<Json> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Json List ")),
-      body: Center(child: Container(
-        child:
-            FutureBuilder(builder: (context, AsyncSnapshot<PostList> snapshot) {
-          List<Post> allPosts;
-          if (snapshot.hasData) {
-            allPosts = snapshot.data!.posts;
-            return Text(allPosts[0].title);
-            // return createListView(snapshot.data, context);
-          }
+      body: Center(
+          child: Container(
+        child: FutureBuilder(
+            future: data,
+            builder: (context, AsyncSnapshot<PostList> snapshot) {
+              List<Post> allPosts;
+              if (snapshot.hasData) {
+                allPosts = snapshot.data!.posts;
+                //return Text(allPosts[0].title);
+                return createListView(allPosts, context);
+              }
 
-          return CircularProgressIndicator();
-        }),
+              return CircularProgressIndicator();
+            }),
       )),
     );
   }
@@ -51,7 +51,7 @@ class _json extends State<Json> {
     return data;
   }
 
-  Widget createListView(List data, BuildContext context) {
+  Widget createListView(List<Post> data, BuildContext context) {
     return Container(
         child: ListView.builder(
             itemCount: data.length,
@@ -61,14 +61,14 @@ class _json extends State<Json> {
                 children: [
                   Divider(height: 50),
                   ListTile(
-                    title: Text("${data[index]["title"]}"),
-                    subtitle: Text("${data[index]["id"]}"),
+                    title: Text("${data[index].title}"),
+                    subtitle: Text("${data[index].body}"),
                     leading: Column(
                       children: [
                         CircleAvatar(
                           backgroundColor: Color.fromRGBO(23, 34, 45, 1),
                           radius: 23,
-                          child: Text("${data[index]["id"]}"),
+                          child: Text("${data[index].userId}"),
                         )
                       ],
                     ),
